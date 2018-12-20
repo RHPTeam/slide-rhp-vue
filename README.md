@@ -1,4 +1,4 @@
-# sliderrhpteam
+# Slide using vue.js
 
 > A Vue.js project
 
