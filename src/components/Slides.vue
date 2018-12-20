@@ -1,15 +1,16 @@
 <template>
 	<div class="slides">
+		<app-size-form/>
 		<div
 			class="slides--inner"
 			:style="{
-				width: innerWidth + 'px',
+				width: singleWidth*slides.length + 'px',
 				marginLeft: '-' + slideInnerMarginLeft + 'px'
 			}"
 		>
 			<app-slide
 				v-for="(slide, index) in slides"
-				:style="{ width: singleWidth + 'px ' }"
+				:style="{ width: singleWidth/itemsPerSlide + 'px ' }"
 				:slide="slide"
 				:key="index"
 			/>
@@ -31,6 +32,7 @@
 
 <script>
 import AppSlide from "@/components/Slide";
+import AppSizeForm from "@/components/SizeForm";
 export default {
 	props: {
 		itemsPerSlide: {
@@ -40,16 +42,8 @@ export default {
 	},
 	data() {
 		return {
-			slides: [
-				{ src: "static/img/slide01.jpg" },
-				{ src: "static/img/slide02.jpg" },
-				{ src: "static/img/slide03.jpg" },
-				{ src: "static/img/slide04.jpg" },
-				{ src: "static/img/slide05.jpg" },
-				{ src: "static/img/slide06.jpg" }
-			],
 			innerWidth: 0,
-			singleWidth: 0,
+		
 			currentIndex: 0
 		};
 	},
@@ -69,22 +63,33 @@ export default {
 	computed: {
 		slideInnerMarginLeft() {
 			return this.currentIndex * this.singleWidth;
+		},
+		slides:{
+			get(){
+				return this.$store.getters.getSlides;
+			}
+		},
+		singleWidth:{
+			get(){
+				return this.$store.getters.getWidth;
+			}
 		}
+	
 	},
 	components: {
-		AppSlide
+		AppSlide,
+		AppSizeForm,
 	},
 	mounted() {
 		this.$nextTick(() => {
-			let singleWidth = this.$el.clientWidth / this.itemsPerSlide;
-			this.$set(this.$data, "singleWidth", singleWidth);
-			this.$set(this.$data, "innerWidth", singleWidth * this.slides.length);
+
 		});
 	}
 };
 </script>
 
 <style scoped>
+
 span {
 	cursor: pointer;
 }
